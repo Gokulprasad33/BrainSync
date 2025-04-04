@@ -2,6 +2,7 @@ package com.example.BrainSync.screens
 
 import android.app.Application
 import android.app.DatePickerDialog
+import android.graphics.drawable.Icon
 import android.widget.DatePicker
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -36,12 +37,17 @@ import com.example.brainsyncapp.viewmodel.ViewModelFactory
 import java.util.Calendar
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.materialIcon
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import org.w3c.dom.Text
 
 data class Note(
     var title: String = "",
@@ -83,7 +89,7 @@ fun HomeScreen(navController: NavHostController) {
                 state = rememberLazyListState()
             ) {
                 items(notes) { note ->
-                    NoteItem(note)
+                    NoteItem(note,noteViewModel)
                 }
             }
         }
@@ -91,7 +97,7 @@ fun HomeScreen(navController: NavHostController) {
 }
 
 @Composable
-fun NoteItem(note: NoteEntity) {
+fun NoteItem(note: NoteEntity,noteViewModel: NoteViewModel) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -99,24 +105,64 @@ fun NoteItem(note: NoteEntity) {
             .background(MaterialTheme.colorScheme.tertiary)
             .padding(16.dp)
     ) {
-        Text(
-            text = note.noteTitle,
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onSurface
-        )
+        var dropdownMenuStatus by remember { mutableStateOf(false) }
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+        ) {
+            Text(
+                text = note.noteTitle,
+                fontSize = 36.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black,
+                modifier = Modifier.align(Alignment.CenterStart)
+            )
+
+            Box(
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+            ) {
+                IconButton(onClick = {
+                    dropdownMenuStatus = true
+                }) {
+                    Icon(
+                        imageVector = Icons.Default.MoreVert,
+                        contentDescription = "More Options",
+                        tint = Color.Black
+                    )
+                }
+                DropdownMenu(
+                    expanded = dropdownMenuStatus,
+                    onDismissRequest = { dropdownMenuStatus = false }
+                ) {
+                    DropdownMenuItem(
+                        text = { Text("Edit") },
+                        onClick = {
+                            dropdownMenuStatus = false
+                        }
+                    )
+                    DropdownMenuItem(
+                        text = { Text("Delete") },
+                        onClick = {
+                            noteViewModel.deleteNote(note)
+                            dropdownMenuStatus = false
+                        }
+                    )
+                }
+            }
+        }
         Spacer(modifier = Modifier.height(4.dp))
         Text(
             text = note.noteContent,
             fontSize = 16.sp,
-            color = MaterialTheme.colorScheme.onSurface
+            color = Color.Gray
         )
         if (note.noteDueDate?.isNotEmpty() == true) {
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = "Due: ${note.noteDueDate}",
                 fontSize = 14.sp,
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                color = Color.Gray
             )
         }
         if (note.noteLabel?.isNotEmpty() == true) {
@@ -124,7 +170,7 @@ fun NoteItem(note: NoteEntity) {
             Text(
                 text = "Label: ${note.noteLabel}",
                 fontSize = 14.sp,
-                color = MaterialTheme.colorScheme.primary
+                color = Color.Gray
             )
         }
         if (note.notePriority?.isNotEmpty() == true) {
@@ -132,7 +178,7 @@ fun NoteItem(note: NoteEntity) {
             Text(
                 text = "Priority: ${note.notePriority}",
                 fontSize = 14.sp,
-                color = MaterialTheme.colorScheme.secondary
+                color = Color.Gray
             )
         }
     }
@@ -150,13 +196,14 @@ fun AddNote(navController: NavHostController) {
     Scaffold(
         bottomBar = {
             FloatingToolBar(
+                navController=navController,
                 noteViewModel = noteViewModel,
                 note = note,
                 onNoteChange = { note = it },
                 modifier = Modifier
                     .imePadding()
-                    .fillMaxWidth()
-            )
+                    .fillMaxWidth(),
+                )
         }
     ) { innerPadding ->
         Box(
@@ -237,6 +284,7 @@ fun AddNote(navController: NavHostController) {
 //Floating toolbar
 @Composable
 fun FloatingToolBar(
+    navController: NavHostController,
     noteViewModel: NoteViewModel,
     note: Note,
     onNoteChange: (Note) -> Unit,
@@ -250,6 +298,7 @@ fun FloatingToolBar(
             .background(color = MaterialTheme.colorScheme.primary),
         contentAlignment = Alignment.BottomCenter // Keeps it at the bottom
     ) {
+        val coroutineScope = rememberCoroutineScope()
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             val showDatePicker = remember { mutableStateOf(false) }
             val showPriorityPicker = remember { mutableStateOf(false) }
@@ -303,6 +352,10 @@ fun FloatingToolBar(
                         noteDueDate = note.dueDate ?: ""
                     )
                     noteViewModel.insertNote(noteToSave)
+                    coroutineScope.launch {
+                        delay(500)
+                        navController.navigate("homescreen")
+                    }
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary),
                 modifier = Modifier.padding(4.dp)
