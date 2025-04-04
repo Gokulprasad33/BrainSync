@@ -12,6 +12,8 @@ class NoteViewModel(application: Application) : AndroidViewModel(application) {
     private val noteDao = NoteDatabase.getDatabase(application).noteDao()
 
     val allNotes: LiveData<List<NoteEntity>> = noteDao.getAllNotes()
+    val labelNotes: LiveData<List<NoteEntity>> =noteDao.getNoteByLabel()
+    val priorityNotes: LiveData<List<NoteEntity>> =noteDao.getNoteByPriority()
 
     fun insertNote(note: NoteEntity) {
         viewModelScope.launch(Dispatchers.IO) {
