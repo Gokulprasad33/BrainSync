@@ -2,7 +2,6 @@ package com.example.BrainSync.screens
 
 import android.app.Application
 import android.app.DatePickerDialog
-import android.graphics.drawable.Icon
 import android.widget.DatePicker
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -38,7 +37,6 @@ import java.util.Calendar
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.materialIcon
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -47,7 +45,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.w3c.dom.Text
 
 data class Note(
     var title: String = "",
@@ -89,7 +86,7 @@ fun HomeScreen(navController: NavHostController) {
                 state = rememberLazyListState()
             ) {
                 items(notes) { note ->
-                    NoteItem(note,noteViewModel)
+                    NoteItem(note,noteViewModel,navController)
                 }
             }
         }
@@ -97,7 +94,8 @@ fun HomeScreen(navController: NavHostController) {
 }
 
 @Composable
-fun NoteItem(note: NoteEntity,noteViewModel: NoteViewModel) {
+fun NoteItem(note: NoteEntity,noteViewModel: NoteViewModel,navController: NavHostController) {
+//    val navController = rememberNavController()
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -138,6 +136,7 @@ fun NoteItem(note: NoteEntity,noteViewModel: NoteViewModel) {
                     DropdownMenuItem(
                         text = { Text("Edit") },
                         onClick = {
+                            navController.navigate("edit/${note.id}")
                             dropdownMenuStatus = false
                         }
                     )
@@ -196,7 +195,7 @@ fun AddNote(navController: NavHostController) {
     Scaffold(
         bottomBar = {
             FloatingToolBar(
-                navController=navController,
+                navController =navController,
                 noteViewModel = noteViewModel,
                 note = note,
                 onNoteChange = { note = it },
@@ -620,6 +619,108 @@ fun ShowFiles(showBottomSheet: MutableState<Boolean>) {
             }
         }
     }
+}
+
+@Composable
+fun EditNote(navController: NavHostController,noteId: Int) {
+    val context = LocalContext.current
+    val noteViewModel: NoteViewModel = viewModel(
+        factory = ViewModelFactory(context.applicationContext as Application)
+    )
+
+    var note by remember { mutableStateOf(Note()) }
+
+    Scaffold(
+        bottomBar = {
+            FloatingToolBar(
+                navController =navController,
+                noteViewModel = noteViewModel,
+                note = note,
+                onNoteChange = { note = it },
+                modifier = Modifier
+                    .imePadding()
+                    .fillMaxWidth(),
+            )
+        }
+    ) { innerPadding ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.secondary)
+                .padding(innerPadding)
+                .navigationBarsPadding()
+        ) {
+            Column(
+                modifier = Modifier
+                    .padding(0.dp)
+                    .verticalScroll(rememberScrollState())
+                    .imePadding()
+                    .fillMaxSize()
+            ) {
+                Row { //Title
+                    TextField(
+                        value =note.title,
+                        onValueChange = { note = note.copy(title = it) },
+                        placeholder = {
+                            Text(
+                                "Title",
+                                fontSize = 40.sp,
+                                color = Color.Gray
+                            )
+                        },
+                        textStyle = TextStyle(
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 40.sp,
+                            color = Color.Gray
+                        ),
+                        colors = TextFieldDefaults.colors(
+                            focusedContainerColor = Color.Transparent,
+                            unfocusedContainerColor = Color.Transparent,
+                            disabledContainerColor = Color.Transparent,
+                            focusedIndicatorColor = Color.Transparent,
+                            unfocusedIndicatorColor = Color.Transparent,
+                            disabledIndicatorColor = Color.Transparent
+                        ),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 10.dp)
+                    )
+                }
+                HorizontalDivider(
+                    thickness = 1.2.dp,
+                    color = MaterialTheme.colorScheme.primary
+                )
+                Row { //Notes
+                    TextField(
+                        value =note.content,
+                        onValueChange = { note = note.copy(content = it) },
+                        label = { Text(text = "Write Content", color = Color.Black) },
+                        textStyle = TextStyle(
+                            fontWeight = FontWeight.Normal,
+                            fontSize = 26.sp,
+                            color = Color.Black
+                        ),
+                        colors = TextFieldDefaults.colors(
+                            focusedContainerColor = Color.Transparent,
+                            unfocusedContainerColor = Color.Transparent,
+                            disabledContainerColor = Color.Transparent,
+                            focusedIndicatorColor = Color.Transparent,
+                            unfocusedIndicatorColor = Color.Transparent,
+                            disabledIndicatorColor = Color.Transparent
+                        ),
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .fillMaxHeight(0.8f)
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun ViewNote(navController: NavHostController) {
+
 }
 /*
 1.Change UI

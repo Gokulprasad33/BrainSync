@@ -23,4 +23,10 @@ interface NoteDao {
 
     @Query("SELECT * FROM notes ORDER BY notePriority")
     fun getNoteByPriority(): LiveData<List<NoteEntity>>
+
+    @Query("SELECT * FROM notes ORDER BY id")
+    fun getNoteById(): LiveData<List<NoteEntity>>
+
+    @Query("SELECT * FROM notes WHERE id=:noteId LIMIT 1")
+    fun getIdNote(noteId: Int): LiveData<NoteEntity>
 }
