@@ -27,6 +27,10 @@ BrainSync is a productivity companion app designed to help users dump their thou
 ---
 ![App Screenshot 1](https://github.com/Gokulprasad33/BrainSync/blob/master/app/src/main/java/com/example/brainsyncapp/ui/theme/Screenshot2.jpg?raw=true)
 
+<p align="center">
+  <img src="https://raw.githubusercontent.com/YourUsername/BrainSync/main/app/src/main/java/com/example/brainsyncapp/ui/theme/Screenshot1.jpg" width="300"/>
+</p>
+
 
 
 ## 🛠️ How to Build
