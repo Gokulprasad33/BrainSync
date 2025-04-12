@@ -681,7 +681,7 @@ fun ViewNote(navController: NavHostController,noteid: Int) {
                         textStyle = TextStyle(
                             fontWeight = FontWeight.Bold,
                             fontSize = 40.sp,
-                            color = Color.Gray
+                            color = Color.Black
                         ),
                         colors = TextFieldDefaults.colors(
                             focusedContainerColor = Color.Transparent,
