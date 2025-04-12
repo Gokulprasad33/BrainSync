@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.*
 import kotlinx.coroutines.launch
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainTheme(modifier: Modifier) {
@@ -45,27 +46,26 @@ fun MainTheme(modifier: Modifier) {
                     )
                 )
 
+//                NavigationDrawerItem(
+//                    label = { Text("Settings", fontWeight = FontWeight.SemiBold) },
+//                    icon = { Icon(Icons.Default.Settings, contentDescription = "Settings icon") },
+//                    selected = currentRoute == "settingscreen",
+//                    onClick = {
+//                        scope.launch { drawerState.close() }
+//                        navController.navigate("settingscreen") //{ popUpTo("settingscreen") { inclusive = false } }
+//                    },
+//                    colors = NavigationDrawerItemDefaults.colors(
+//                        selectedContainerColor = Color(0xFFB9B28A),
+//                        selectedTextColor = Color.White
+//                    )
+//                )
                 NavigationDrawerItem(
-                    label = { Text("Settings", fontWeight = FontWeight.SemiBold) },
-                    icon = { Icon(Icons.Default.Settings, contentDescription = "Settings icon") },
-                    selected = currentRoute == "settingscreen",
+                    label = { Text("About", fontWeight = FontWeight.SemiBold) },
+                    icon = { Icon(Icons.Default.Info, contentDescription = "About icon") },
+                    selected = currentRoute == "aboutscreen",
                     onClick = {
                         scope.launch { drawerState.close() }
-                        navController.navigate("settingscreen") //{ popUpTo("settingscreen") { inclusive = false } }
-                    },
-                    colors = NavigationDrawerItemDefaults.colors(
-                        selectedContainerColor = Color(0xFFB9B28A),
-                        selectedTextColor = Color.White
-                    )
-                )
-
-                NavigationDrawerItem(
-                    label = { Text("Theme", fontWeight = FontWeight.SemiBold) },
-                    icon = { Icon(Icons.Default.Star, contentDescription = "Theme icon") },
-                    selected = currentRoute == "themescreen",
-                    onClick = {
-                        scope.launch { drawerState.close() }
-                        navController.navigate("themescreen") //{ popUpTo("themescreen") { inclusive = false } }
+                        navController.navigate("aboutscreen") //{ popUpTo("settingscreen") { inclusive = false } }
                     },
                     colors = NavigationDrawerItemDefaults.colors(
                         selectedContainerColor = Color(0xFFB9B28A),

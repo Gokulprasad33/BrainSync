@@ -5,6 +5,7 @@ import android.app.DatePickerDialog
 import android.widget.DatePicker
 import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
@@ -107,6 +108,9 @@ fun NoteItem(note: NoteEntity,noteViewModel: NoteViewModel,navController: NavHos
         Box(
             modifier = Modifier
                 .fillMaxWidth()
+                .clickable{
+                    navController.navigate("viewnote/${note.id}")
+                }
         ) {
             Text(
                 text = note.noteTitle,
@@ -136,7 +140,7 @@ fun NoteItem(note: NoteEntity,noteViewModel: NoteViewModel,navController: NavHos
                     DropdownMenuItem(
                         text = { Text("Edit") },
                         onClick = {
-                            navController.navigate("edit/${note.id}")
+                            navController.navigate("viewnote/${note.id}")
                             dropdownMenuStatus = false
                         }
                     )
@@ -620,15 +624,21 @@ fun ShowFiles(showBottomSheet: MutableState<Boolean>) {
         }
     }
 }
-
 @Composable
-fun EditNote(navController: NavHostController,noteId: Int) {
+fun ViewNote(navController: NavHostController,noteid: Int) {
     val context = LocalContext.current
     val noteViewModel: NoteViewModel = viewModel(
         factory = ViewModelFactory(context.applicationContext as Application)
     )
 
     var note by remember { mutableStateOf(Note()) }
+    val noteLiveData = noteViewModel.getIdNote(noteid).observeAsState()
+
+    LaunchedEffect(noteLiveData.value) {
+        noteLiveData.value?.let {
+            note = it
+        }
+    }
 
     Scaffold(
         bottomBar = {
@@ -659,7 +669,7 @@ fun EditNote(navController: NavHostController,noteId: Int) {
             ) {
                 Row { //Title
                     TextField(
-                        value =note.title,
+                        value = note.title,
                         onValueChange = { note = note.copy(title = it) },
                         placeholder = {
                             Text(
@@ -692,9 +702,9 @@ fun EditNote(navController: NavHostController,noteId: Int) {
                 )
                 Row { //Notes
                     TextField(
-                        value =note.content,
+                        value = note.content,
                         onValueChange = { note = note.copy(content = it) },
-                        label = { Text(text = "Write Content", color = Color.Black) },
+                        label = { Text(text = "Write Notes", color = Color.Black) },
                         textStyle = TextStyle(
                             fontWeight = FontWeight.Normal,
                             fontSize = 26.sp,
@@ -716,11 +726,6 @@ fun EditNote(navController: NavHostController,noteId: Int) {
             }
         }
     }
-}
-
-@Composable
-fun ViewNote(navController: NavHostController) {
-
 }
 /*
 1.Change UI

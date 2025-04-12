@@ -11,7 +11,9 @@ import kotlinx.coroutines.launch
 class NoteViewModel(application: Application) : AndroidViewModel(application) {
 
     private val noteDao = NoteDatabase.getDatabase(application).noteDao()
+//    private val settingsDoa = NoteDatabase.getDatabase(application).settingDoa()
 
+//    val getTheme: Boolean= settingsDoa.theme
     val allNotes: LiveData<List<NoteEntity>> = noteDao.getAllNotes()
     val labelNotes: LiveData<List<NoteEntity>> =noteDao.getNoteByLabel()
     val priorityNotes: LiveData<List<NoteEntity>> =noteDao.getNoteByPriority()
@@ -37,5 +39,4 @@ class NoteViewModel(application: Application) : AndroidViewModel(application) {
             )
         }
     }
-
 }

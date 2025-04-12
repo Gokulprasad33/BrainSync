@@ -1,6 +1,7 @@
 package com.example.brainsyncapp.ui.theme
 
 import android.app.Activity
+import android.app.Application
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -10,6 +11,10 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.brainsyncapp.viewmodel.NoteViewModel
+import com.example.brainsyncapp.viewmodel.ViewModelFactory
 
 private val DarkColorScheme = darkColorScheme(
     primary = PrimaryColor,
@@ -32,14 +37,15 @@ private val LightColorScheme = lightColorScheme(
     onSurface = Color(0xFF1C1B1F),
     */
 )
-
 @Composable
 fun BrainSyncAppTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = false,
+
     content: @Composable () -> Unit
 ) {
+//    val dynamicColor = noteViewModel.getTheme
     val colorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             val context = LocalContext.current
