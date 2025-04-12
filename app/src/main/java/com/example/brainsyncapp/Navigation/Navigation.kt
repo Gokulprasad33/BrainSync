@@ -9,7 +9,7 @@ import androidx.navigation.navArgument
 import com.example.BrainSync.screens.AddNote
 import com.example.BrainSync.screens.HomeScreen
 import com.example.BrainSync.screens.ViewNote
-import com.example.brainsyncapp.Screens.About
+import com.example.brainsyncapp.Screens.AboutPage
 
 
 @Composable
@@ -25,7 +25,7 @@ fun Navigation(navController: NavHostController) {
             AddNote(navController)
         }
         composable("aboutscreen"){
-            About(navController)
+            AboutPage(navController)
         }
         composable("viewnote/{noteId}", arguments = listOf(
             navArgument("noteId") { type = NavType.IntType }

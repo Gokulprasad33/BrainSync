@@ -45,6 +45,19 @@ fun MainTheme(modifier: Modifier) {
                         selectedTextColor = Color.White
                     )
                 )
+                NavigationDrawerItem(
+                    label = { Text("About", fontWeight = FontWeight.SemiBold) },
+                    icon = { Icon(Icons.Default.Info, contentDescription = "About icon") },
+                    selected = currentRoute == "aboutscreen",
+                    onClick = {
+                        scope.launch { drawerState.close() }
+                        navController.navigate("aboutscreen")
+                    },
+                    colors = NavigationDrawerItemDefaults.colors(
+                        selectedContainerColor = Color(0xFFB9B28A),
+                        selectedTextColor = Color.White
+                    )
+                )
 
 //                NavigationDrawerItem(
 //                    label = { Text("Settings", fontWeight = FontWeight.SemiBold) },
@@ -59,19 +72,6 @@ fun MainTheme(modifier: Modifier) {
 //                        selectedTextColor = Color.White
 //                    )
 //                )
-                NavigationDrawerItem(
-                    label = { Text("About", fontWeight = FontWeight.SemiBold) },
-                    icon = { Icon(Icons.Default.Info, contentDescription = "About icon") },
-                    selected = currentRoute == "aboutscreen",
-                    onClick = {
-                        scope.launch { drawerState.close() }
-                        navController.navigate("aboutscreen") //{ popUpTo("settingscreen") { inclusive = false } }
-                    },
-                    colors = NavigationDrawerItemDefaults.colors(
-                        selectedContainerColor = Color(0xFFB9B28A),
-                        selectedTextColor = Color.White
-                    )
-                )
             }
         }
     ) {
